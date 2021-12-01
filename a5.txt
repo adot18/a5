@@ -1,0 +1,840 @@
+ANSWERS:
+
+6) Open the word vector file text_example_training.arff (with any editor or pager) and answer: 
+how do you describe this format? What do the numbers in the .arff file represent?
+
+This format (Attribute-Relation File Format) has:
+- a header that includes a 'relation' line, followed by 
+- a long section of attributes, where each line starts with @ 
+- followed by a long section of data in brackets. 
+
+I believe the bracketed vectors of numbers are counts of word occurences. 
+ 
+10) Do you see any difference in the training results between using just amazon review_body text, vs. combining the 
+    review_body text with twitter tweets? Which gives better results?
+
+Yes there is a difference. The review body with tweets appended appears to give better results: 
+
+Without tweets confusion matrix:
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 83 17 |  a = REVIEWS_UNHELPFUL
+ 16 84 |  b = REVIEWS_HELPFUL
+
+With tweets confusion matrix:
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 97  3 |  a = REVIEWS_UNHELPFUL_appended
+  4 96 |  b = REVIEWS_HELPFUL_appended
+
+
+benbow@f6linuxA5:~$ git clone https://github.com/jenbow/a5.git
+Cloning into 'a5'...
+warning: You appear to have cloned an empty repository.
+benbow@f6linuxA5:~$ cd a5
+benbow@f6linuxA5:~/a5$ store
+
+benbow@f6linuxA5:~/a5$ ls ../a4
+REVIEWS            cust-loop.sh     log                     unhelpful_100.tmp
+REVIEWS_UNHELPFUL  helpful_100.tmp  log.save                unhelpful_ids.tmp
+a4.txt             helpful_ids.tmp  loop-create-helpful.sh
+benbow@f6linuxA5:~/a5$ cp -r ../a4/REVIEWS .
+benbow@f6linuxA5:~/a5$ store
+benbow@f6linuxA5:~/a5$ ls
+REVIEWS  a5.txt  log  reviews  weka-3-8-5  weka-3-8-5.zip
+benbow@f6linuxA5:~/a5$ cp -r ../a4/REVIEWS_UNHELPFUL/ .
+benbow@f6linuxA5:~/a5$ store
+benbow@f6linuxA5:~/a5$ ls
+REVIEWS  REVIEWS_UNHELPFUL  a5.txt  log  reviews  weka-3-8-5  weka-3-8-5.zip
+benbow@f6linuxA5:~/a5$ mv REVIEWS REVIEWS_HELPFUL
+benbow@f6linuxA5:~/a5$ store
+benbow@f6linuxA5:~/a5$ mkdir REVIEWS
+benbow@f6linuxA5:~/a5$ ls
+REVIEWS          REVIEWS_UNHELPFUL  log      weka-3-8-5
+REVIEWS_HELPFUL  a5.txt             reviews  weka-3-8-5.zip
+benbow@f6linuxA5:~/a5$ rm reviews/
+rm: cannot remove 'reviews/': Is a directory
+benbow@f6linuxA5:~/a5$ rm -r reviews/
+benbow@f6linuxA5:~/a5$ ls
+REVIEWS          REVIEWS_UNHELPFUL  log         weka-3-8-5.zip
+REVIEWS_HELPFUL  a5.txt             weka-3-8-5
+benbow@f6linuxA5:~/a5$ nano log
+benbow@f6linuxA5:~/a5$ mv REVIEWS_HELPFUL REVIEWS_UNHELPFUL/ REVIEWS
+benbow@f6linuxA5:~/a5$ ls
+REVIEWS  a5.txt  log  weka-3-8-5  weka-3-8-5.zip
+benbow@f6linuxA5:~/a5$ ls REVIEWS/
+REVIEWS_HELPFUL  REVIEWS_UNHELPFUL
+benbow@f6linuxA5:~/a5$ nano log
+benbow@f6linuxA5:~/a5$ java weka.core.converters.TextDirectoryLoader -dir REVIEWS/ > reviews.arff
+benbow@f6linuxA5:~/a5$ store
+benbow@f6linuxA5:~/a5$ ls
+REVIEWS  a5.txt  log  reviews.arff  weka-3-8-5  weka-3-8-5.zip
+benbow@f6linuxA5:~/a5$ head reviews.arff
+@relation _home_benbow_a5_REVIEWS
+
+@attribute text string
+@attribute @@class@@ {REVIEWS_UNHELPFUL,REVIEWS_HELPFUL}
+
+@data
+
+'I cant praise this enough. All of a sudden terrorism has become a real tangible thing to Americans. No longer a story on the news about a faraway land. The threat of terrorism has become a very real element in our everyday lives affecting our travel, the way we do business,and our general feelings of safety and security. Its incredibly intense and tragically confusing. There has been an undeniable climate of fear fueled by a lack of real information on how to protect ourselves and take an active role in the saftey of our families, businesses,our very lives.This book is an excellent place to start. I found it to be easy to read and understand. I felt the concepts it presented were useful and relevent. It gets straight to the facts you need to know, and what you can do to protect yourself. The information regarding protecting your business was particularly useful would suggest it to anyone with a business including small busineses. I think just having a basic understanding of what the hell is going on and where to go from there does wonders to dispel that feeling of uncertainty, vulnerability.  We are in the midst of some wild times my friend. We must arm ourselves with knowledge!\n',REVIEWS_UNHELPFUL
+'I am a physician who turns 65 this week.  My career was and is punctuated by the harassment one receives when one is challenging medical dogma. When I began doing outpatient surgery, I was called before the Executive Committee of my hospital to explain the \\\\\"circus\\\\\" I was involving myself in.  When I began to put intraocualar lenses in eyes after cataract surgery, I was fired from my position as Chief of Ophthalmic Plastic Surgery because \\\\\"Anyone so stupid as to put lenses in eyes has no business teaching residents\\\\\".  When I did the research for the laser used in Lasik, I was told it was unbelievable that anyone could be so stupid as to make incisions across the visual axis of a good eye.  Now it is almost malpractice not to do those things!!!!How time changes things. <br /> <br />There are those who are constantly willing to re-examine what they think they know.  There are others who cannot deal with the idea that what they were taught might be wrong.  One can clearly see that in the reviews above. <br /> <br />Dr. Lipton has clearly challenged what we thought we knew and opened Pandora\'s box.  Scientists have long stated, \\\\\"If you can\'t prove it, it doesn\'t exist.\\\\\"  That means that we relegate our belief system to the quality of our measuring devices.  Since we couldn\'t measure things at biological speeds until we got Pentium class computers, we haven\'t been able to measure biological electronic function for very many years.  Lipton has helped refocus us away from the false belief that the body is Newtonian and reductionistic to the reality that the body works at the atomic level where Newton\'s laws fail and electromagnetic energy rules. <br /> <br />Buy this book---it will change your life if you will measure it against what is real instead of what you were taught.\n',REVIEWS_HELPFUL
+'Dr. Bittman\'s book is packed full of sincerity and truth. His insight in the human existence is profound and refreshing. His thoughts on man\'s innate power is promising and entertaining. Dr. Bittman\'s unique writing style is a pleasure in itself. I feel I\'m a better person for reading this book. It make\'s me feel allright about makeing a few mistakes and asking a few questions in my quest  for truth. A modern day philosopher with a great sense of humor. I will enjoy this book many times over and over again.\n',REVIEWS_UNHELPFUL
+benbow@f6linuxA5:~/a5$ store
+
+benbow@f6linuxA5:~/a5$ /proc/meminfo
+-bash: /proc/meminfo: Permission denied
+benbow@f6linuxA5:~/a5$ free -h
+              total        used        free      shared  buff/cache   available
+Mem:          3.9Gi       2.6Gi       325Mi       7.0Mi       961Mi       611Mi
+Swap:         3.9Gi       152Mi       3.7Gi
+benbow@f6linuxA5:~/a5$   java -Xmx2048m weka.filters.unsupervised.attribute.StringToWordVector -i reviews.arff -o reviews-training.arff -M 2
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by weka.core.WekaPackageClassLoaderManager (file:/home/benbow/a5/weka-3-8-5/weka.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of weka.core.WekaPackageClassLoaderManager
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+benbow@f6linuxA5:~/a5$ store
+benbow@f6linuxA5:~/a5$ less reviews-training.arff
+benbow@f6linuxA5:~/a5$ store
+benbow@f6linuxA5:~/a5$ head reviews-training.arff
+@relation '_home_benbow_a5_REVIEWS-weka.filters.unsupervised.attribute.StringToWordVector-R1-W1000-prune-rate-1.0-N0-stemmerweka.core.stemmers.NullStemmer-stopwords-handlerweka.core.stopwords.Null-M2-tokenizerweka.core.tokenizers.WordTokenizer -delimiters \" \\r\\n\\t.,;:\\\'\\\"()?!\"'
+
+@attribute @@class@@ {REVIEWS_UNHELPFUL,REVIEWS_HELPFUL}
+@attribute & numeric
+@attribute &#34 numeric
+@attribute &quot numeric
+@attribute - numeric
+@attribute -- numeric
+@attribute /> numeric
+@attribute />* numeric
+benbow@f6linuxA5:~/a5$ tail reviews-training.arff
+{3 1,97 1,147 1,175 1,199 1,201 1,220 1,223 1,239 1,276 1,287 1,404 1,414 1,431 1,475 1,478 1,531 1,553 1,572 1,576 1,586 1,612 1,630 1,701 1,705 1,728 1,831 1,876 1,892 1,935 1,1002 1,1008 1,1016 1,1024 1,1034 1,1036 1,1054 1,1058 1}
+{0 REVIEWS_HELPFUL,4 1,30 1,33 1,37 1,82 1,89 1,169 1,174 1,175 1,178 1,197 1,205 1,209 1,220 1,233 1,239 1,242 1,250 1,251 1,255 1,279 1,284 1,308 1,413 1,417 1,484 1,492 1,529 1,541 1,553 1,572 1,576 1,665 1,670 1,690 1,692 1,693 1,705 1,709 1,710 1,728 1,750 1,777 1,831 1,835 1,840 1,843 1,866 1,894 1,924 1,935 1,937 1,944 1,958 1,959 1,961 1,985 1,991 1,996 1,1014 1,1028 1,1030 1,1034 1,1036 1,1042 1,1058 1,1062 1}
+{93 1,122 1,147 1,175 1,176 1,209 1,220 1,233 1,238 1,276 1,303 1,313 1,324 1,364 1,385 1,390 1,432 1,490 1,501 1,550 1,553 1,558 1,560 1,568 1,572 1,594 1,644 1,671 1,705 1,710 1,712 1,735 1,804 1,831 1,862 1,870 1,935 1,961 1,984 1,986 1,1036 1,1048 1}
+{0 REVIEWS_HELPFUL,3 1,6 1,37 1,38 1,46 1,47 1,75 1,76 1,89 1,97 1,109 1,122 1,123 1,126 1,130 1,147 1,153 1,160 1,168 1,171 1,175 1,178 1,205 1,211 1,212 1,217 1,218 1,220 1,231 1,233 1,235 1,239 1,242 1,245 1,247 1,255 1,258 1,260 1,269 1,276 1,278 1,284 1,287 1,303 1,337 1,341 1,355 1,379 1,380 1,390 1,413 1,415 1,416 1,426 1,450 1,458 1,466 1,469 1,475 1,480 1,499 1,503 1,510 1,512 1,515 1,527 1,528 1,533 1,536 1,541 1,546 1,548 1,553 1,565 1,566 1,567 1,568 1,572 1,576 1,577 1,596 1,603 1,605 1,609 1,614 1,621 1,622 1,628 1,635 1,638 1,645 1,656 1,661 1,670 1,671 1,673 1,676 1,686 1,693 1,696 1,705 1,708 1,710 1,712 1,714 1,719 1,723 1,724 1,726 1,729 1,733 1,736 1,738 1,748 1,751 1,757 1,758 1,765 1,772 1,778 1,786 1,803 1,805 1,806 1,808 1,826 1,831 1,838 1,849 1,854 1,858 1,872 1,873 1,886 1,888 1,890 1,891 1,901 1,907 1,914 1,921 1,932 1,934 1,935 1,936 1,937 1,938 1,941 1,942 1,943 1,946 1,948 1,950 1,951 1,952 1,958 1,961 1,965 1,971 1,993 1,1002 1,1003 1,1008 1,1018 1,1019 1,1021 1,1024 1,1026 1,1032 1,1033 1,1034 1,1035 1,1037 1,1054 1,1058 1,1061 1}
+{49 1,175 1,276 1,284 1,286 1,469 1,545 1,553 1,576 1,635 1,705 1,870 1,935 1,950 1,1004 1,1014 1,1048 1}
+{0 REVIEWS_HELPFUL,6 1,37 1,45 1,71 1,89 1,93 1,97 1,110 1,111 1,119 1,131 1,141 1,143 1,160 1,174 1,175 1,205 1,212 1,215 1,220 1,233 1,239 1,251 1,255 1,257 1,269 1,270 1,276 1,285 1,287 1,295 1,308 1,317 1,339 1,351 1,370 1,414 1,438 1,443 1,458 1,466 1,492 1,495 1,501 1,515 1,525 1,531 1,545 1,553 1,572 1,576 1,579 1,588 1,599 1,608 1,612 1,640 1,643 1,645 1,650 1,675 1,676 1,685 1,691 1,696 1,705 1,719 1,743 1,754 1,759 1,777 1,827 1,835 1,868 1,898 1,914 1,934 1,935 1,936 1,939 1,944 1,961 1,991 1,1002 1,1008 1,1012 1,1018 1,1029 1,1030 1,1033 1,1051 1,1060 1,1062 1}
+{3 1,46 1,54 1,83 1,89 1,97 1,126 1,153 1,175 1,200 1,205 1,220 1,225 1,242 1,255 1,270 1,289 1,291 1,362 1,397 1,411 1,441 1,510 1,529 1,549 1,553 1,555 1,572 1,576 1,612 1,618 1,646 1,661 1,674 1,705 1,719 1,796 1,804 1,826 1,831 1,847 1,864 1,868 1,904 1,913 1,934 1,935 1,944 1,958 1,961 1,1008 1,1016 1,1018 1,1021 1,1024 1,1036 1,1049 1,1054 1}
+{0 REVIEWS_HELPFUL,15 1,17 1,19 1,20 1,21 1,25 1,27 1,28 1,29 1,34 1,37 1,38 1,43 1,45 1,47 1,56 1,75 1,89 1,92 1,93 1,97 1,124 1,131 1,133 1,140 1,142 1,144 1,149 1,151 1,157 1,160 1,169 1,174 1,175 1,178 1,189 1,199 1,212 1,214 1,218 1,220 1,231 1,233 1,238 1,239 1,242 1,248 1,249 1,253 1,255 1,258 1,259 1,265 1,269 1,270 1,272 1,273 1,276 1,277 1,284 1,285 1,286 1,287 1,291 1,293 1,315 1,318 1,330 1,339 1,344 1,347 1,351 1,355 1,370 1,373 1,374 1,380 1,383 1,386 1,400 1,411 1,416 1,417 1,423 1,424 1,426 1,429 1,437 1,450 1,456 1,458 1,461 1,466 1,467 1,469 1,473 1,474 1,475 1,477 1,482 1,483 1,485 1,486 1,492 1,495 1,503 1,510 1,512 1,520 1,521 1,523 1,527 1,548 1,552 1,553 1,561 1,566 1,572 1,574 1,576 1,577 1,581 1,584 1,588 1,589 1,599 1,601 1,605 1,606 1,612 1,619 1,623 1,631 1,641 1,642 1,645 1,649 1,652 1,654 1,657 1,659 1,661 1,664 1,670 1,671 1,674 1,676 1,685 1,689 1,690 1,694 1,696 1,702 1,705 1,706 1,708 1,710 1,712 1,714 1,718 1,719 1,722 1,728 1,775 1,779 1,785 1,787 1,795 1,800 1,828 1,829 1,831 1,832 1,835 1,836 1,849 1,853 1,858 1,862 1,867 1,868 1,870 1,871 1,872 1,877 1,881 1,882 1,886 1,887 1,903 1,907 1,913 1,923 1,933 1,934 1,935 1,936 1,939 1,941 1,942 1,944 1,945 1,946 1,947 1,950 1,953 1,956 1,961 1,966 1,969 1,974 1,978 1,984 1,986 1,995 1,996 1,1000 1,1001 1,1002 1,1005 1,1010 1,1012 1,1014 1,1016 1,1017 1,1020 1,1022 1,1030 1,1033 1,1034 1,1035 1,1038 1,1042 1,1048 1,1059 1,1060 1}
+{81 1,89 1,92 1,126 1,138 1,147 1,175 1,194 1,220 1,242 1,277 1,304 1,369 1,458 1,510 1,512 1,531 1,541 1,553 1,567 1,568 1,572 1,588 1,625 1,646 1,671 1,699 1,700 1,705 1,730 1,803 1,911 1,935 1,958 1,961 1,1000 1,1060 1}
+{0 REVIEWS_HELPFUL,21 1,25 1,27 1,28 1,29 1,30 1,32 1,33 1,37 1,83 1,89 1,92 1,107 1,114 1,126 1,142 1,146 1,163 1,169 1,175 1,178 1,200 1,205 1,211 1,214 1,220 1,233 1,245 1,255 1,256 1,258 1,276 1,277 1,281 1,291 1,308 1,310 1,336 1,382 1,383 1,406 1,458 1,466 1,469 1,494 1,512 1,515 1,553 1,572 1,588 1,636 1,685 1,690 1,696 1,705 1,710 1,714 1,719 1,720 1,726 1,743 1,754 1,791 1,802 1,803 1,806 1,823 1,831 1,864 1,913 1,934 1,935 1,937 1,942 1,944 1,950 1,961 1,991 1,1008 1,1012 1,1015 1,1016 1,1018 1,1024 1,1034 1,1040 1,1059 1,1060 1,1061 1}
+
+benbow@f6linuxA5:~/a5$ java -Xmx2048m  weka.classifiers.meta.ClassificationViaRegression -W weka.classifiers.trees.M5P -num-decimal-places 4  -t reviews-training.arff -d reviews-training.model -c 1
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by weka.core.WekaPackageClassLoaderManager (file:/home/benbow/a5/weka-3-8-5/weka.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of weka.core.WekaPackageClassLoaderManager
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+Dec 01, 2021 5:42:12 AM com.github.fommil.netlib.BLAS <clinit>
+WARNING: Failed to load implementation from: com.github.fommil.netlib.NativeSystemBLAS
+Dec 01, 2021 5:42:12 AM com.github.fommil.netlib.BLAS <clinit>
+WARNING: Failed to load implementation from: com.github.fommil.netlib.NativeRefBLAS
+Dec 01, 2021 5:42:12 AM com.github.fommil.netlib.LAPACK <clinit>
+WARNING: Failed to load implementation from: com.github.fommil.netlib.NativeSystemLAPACK
+Dec 01, 2021 5:42:12 AM com.github.fommil.netlib.LAPACK <clinit>
+WARNING: Failed to load implementation from: com.github.fommil.netlib.NativeRefLAPACK
+
+Options: -W weka.classifiers.trees.M5P -num-decimal-places 4
+
+=== Classifier model (full training set) ===
+
+Classification via Regression
+
+Classifier for class with index 0:
+
+M5 pruned model tree:
+(using smoothed linear models)
+
+people <= 0.5 :
+|   not <= 0.5 :
+|   |   on <= 0.5 : LM1 (45/0%)
+|   |   on >  0.5 :
+|   |   |   reading <= 0.5 :
+|   |   |   |   some <= 0.5 : LM2 (12/0%)
+|   |   |   |   some >  0.5 : LM3 (7/0%)
+|   |   |   reading >  0.5 : LM4 (8/0%)
+|   not >  0.5 :
+|   |   no <= 0.5 :
+|   |   |   they <= 0.5 :
+|   |   |   |   more <= 0.5 : LM5 (19/0%)
+|   |   |   |   more >  0.5 :
+|   |   |   |   |   about <= 0.5 : LM6 (5/0%)
+|   |   |   |   |   about >  0.5 : LM7 (6/0%)
+|   |   |   they >  0.5 :
+|   |   |   |   on <= 0.5 : LM8 (8/63.246%)
+|   |   |   |   on >  0.5 : LM9 (10/0%)
+|   |   no >  0.5 : LM10 (24/36.515%)
+people >  0.5 :
+|   more <= 0.5 : LM11 (13/45.291%)
+|   more >  0.5 : LM12 (43/0%)
+
+LM num: 1
+@@class@@ =
+	-0.0973 * <br
+	- 0.0302 * about
+	- 0.0419 * can
+	+ 0.0475 * characters
+	- 0.0251 * more
+	- 0.0837 * no
+	- 0.0366 * not
+	- 0.0613 * on
+	- 0.0136 * people
+	+ 0.0241 * reading
+	+ 0.0209 * short
+	+ 0.0263 * some
+	- 0.0414 * they
+	+ 1.0193
+
+LM num: 2
+@@class@@ =
+	-0.3762 * <br
+	- 0.0302 * about
+	- 0.2919 * can
+	+ 0.0475 * characters
+	- 0.0251 * more
+	- 0.0837 * no
+	- 0.0366 * not
+	- 0.0779 * on
+	- 0.0136 * people
+	+ 0.1029 * reading
+	+ 0.0209 * short
+	+ 0.1914 * some
+	- 0.0414 * they
+	+ 0.9321
+
+LM num: 3
+@@class@@ =
+	-0.273 * <br
+	- 0.0302 * about
+	- 0.1854 * can
+	+ 0.0475 * characters
+	- 0.0251 * more
+	- 0.0837 * no
+	- 0.0366 * not
+	- 0.0779 * on
+	- 0.0136 * people
+	+ 0.1029 * reading
+	+ 0.0209 * short
+	+ 0.2077 * some
+	- 0.0414 * they
+	+ 0.9243
+
+LM num: 4
+@@class@@ =
+	-0.2184 * <br
+	- 0.0302 * about
+	- 0.1443 * can
+	+ 0.0475 * characters
+	- 0.0251 * more
+	- 0.0837 * no
+	- 0.0366 * not
+	- 0.0779 * on
+	- 0.0136 * people
+	+ 0.1356 * reading
+	+ 0.0209 * short
+	+ 0.1566 * some
+	- 0.0414 * they
+	+ 0.9416
+
+LM num: 5
+@@class@@ =
+	-0.1514 * <br
+	- 0.1051 * about
+	- 0.0203 * can
+	+ 0.0475 * characters
+	- 0.0786 * more
+	- 0.1673 * no
+	- 0.0366 * not
+	- 0.0709 * on
+	- 0.0136 * people
+	+ 0.0209 * short
+	- 0.0105 * some
+	- 0.2107 * they
+	+ 1.0413
+
+LM num: 6
+@@class@@ =
+	-0.1514 * <br
+	- 0.0755 * I
+	- 0.2089 * about
+	- 0.0203 * can
+	+ 0.0475 * characters
+	- 0.0951 * more
+	- 0.1673 * no
+	- 0.0366 * not
+	- 0.0709 * on
+	- 0.0136 * people
+	+ 0.0209 * short
+	- 0.0105 * some
+	- 0.2107 * they
+	+ 1.1066
+
+LM num: 7
+@@class@@ =
+	-0.1514 * <br
+	- 0.1179 * I
+	- 0.2045 * about
+	- 0.0203 * can
+	+ 0.0475 * characters
+	- 0.0951 * more
+	- 0.1673 * no
+	- 0.0366 * not
+	- 0.0709 * on
+	- 0.0136 * people
+	+ 0.0209 * short
+	- 0.0105 * some
+	- 0.2107 * they
+	+ 1.1037
+
+LM num: 8
+@@class@@ =
+	-0.1691 * <br
+	- 0.0624 * about
+	- 0.0203 * can
+	+ 0.0475 * characters
+	+ 0.1328 * more
+	- 0.1673 * no
+	- 0.0366 * not
+	- 0.2062 * on
+	- 0.0136 * people
+	+ 0.0209 * short
+	- 0.0105 * some
+	- 0.2488 * they
+	+ 0.8155
+
+LM num: 9
+@@class@@ =
+	-0.1691 * <br
+	- 0.0624 * about
+	- 0.0203 * can
+	+ 0.0475 * characters
+	+ 0.0405 * more
+	- 0.1673 * no
+	- 0.0366 * not
+	- 0.1968 * on
+	- 0.0136 * people
+	+ 0.0209 * short
+	- 0.0105 * some
+	- 0.2488 * they
+	+ 0.7879
+
+LM num: 10
+@@class@@ =
+	-0.1286 * <br
+	- 0.0822 * about
+	- 0.0203 * can
+	+ 0.1397 * characters
+	- 0.0251 * more
+	- 0.2187 * no
+	- 0.0366 * not
+	- 0.0223 * on
+	- 0.0136 * people
+	+ 0.0209 * short
+	- 0.0105 * some
+	- 0.1456 * they
+	+ 0.5461
+
+LM num: 11
+@@class@@ =
+	-0.0467 * <br
+	- 0.0247 * about
+	- 0.0152 * can
+	+ 0.0316 * characters
+	- 0.0736 * more
+	- 0.0516 * no
+	- 0.0352 * not
+	- 0.0174 * on
+	- 0.0305 * people
+	+ 0.4004 * short
+	- 0.0235 * some
+	- 0.0267 * they
+	+ 0.2648
+
+LM num: 12
+@@class@@ =
+	-0.0467 * <br
+	- 0.0247 * about
+	- 0.0152 * can
+	+ 0.0316 * characters
+	- 0.0478 * more
+	- 0.0516 * no
+	- 0.0352 * not
+	- 0.0174 * on
+	- 0.0305 * people
+	+ 0.0996 * short
+	- 0.0235 * some
+	- 0.0267 * they
+	+ 0.2443
+
+Number of Rules : 12
+
+Classifier for class with index 1:
+
+M5 pruned model tree:
+(using smoothed linear models)
+
+people <= 0.5 :
+|   not <= 0.5 :
+|   |   on <= 0.5 : LM1 (45/0%)
+|   |   on >  0.5 :
+|   |   |   reading <= 0.5 :
+|   |   |   |   some <= 0.5 : LM2 (12/0%)
+|   |   |   |   some >  0.5 : LM3 (7/0%)
+|   |   |   reading >  0.5 : LM4 (8/0%)
+|   not >  0.5 :
+|   |   no <= 0.5 :
+|   |   |   they <= 0.5 :
+|   |   |   |   more <= 0.5 : LM5 (19/0%)
+|   |   |   |   more >  0.5 :
+|   |   |   |   |   about <= 0.5 : LM6 (5/0%)
+|   |   |   |   |   about >  0.5 : LM7 (6/0%)
+|   |   |   they >  0.5 :
+|   |   |   |   on <= 0.5 : LM8 (8/63.246%)
+|   |   |   |   on >  0.5 : LM9 (10/0%)
+|   |   no >  0.5 : LM10 (24/36.515%)
+people >  0.5 :
+|   more <= 0.5 : LM11 (13/45.291%)
+|   more >  0.5 : LM12 (43/0%)
+
+LM num: 1
+@@class@@ =
+	0.0973 * <br
+	+ 0.0302 * about
+	+ 0.0419 * can
+	- 0.0475 * characters
+	+ 0.0251 * more
+	+ 0.0837 * no
+	+ 0.0366 * not
+	+ 0.0613 * on
+	+ 0.0136 * people
+	- 0.0241 * reading
+	- 0.0209 * short
+	- 0.0263 * some
+	+ 0.0414 * they
+	- 0.0193
+
+LM num: 2
+@@class@@ =
+	0.3762 * <br
+	+ 0.0302 * about
+	+ 0.2919 * can
+	- 0.0475 * characters
+	+ 0.0251 * more
+	+ 0.0837 * no
+	+ 0.0366 * not
+	+ 0.0779 * on
+	+ 0.0136 * people
+	- 0.1029 * reading
+	- 0.0209 * short
+	- 0.1914 * some
+	+ 0.0414 * they
+	+ 0.0679
+
+LM num: 3
+@@class@@ =
+	0.273 * <br
+	+ 0.0302 * about
+	+ 0.1854 * can
+	- 0.0475 * characters
+	+ 0.0251 * more
+	+ 0.0837 * no
+	+ 0.0366 * not
+	+ 0.0779 * on
+	+ 0.0136 * people
+	- 0.1029 * reading
+	- 0.0209 * short
+	- 0.2077 * some
+	+ 0.0414 * they
+	+ 0.0757
+
+LM num: 4
+@@class@@ =
+	0.2184 * <br
+	+ 0.0302 * about
+	+ 0.1443 * can
+	- 0.0475 * characters
+	+ 0.0251 * more
+	+ 0.0837 * no
+	+ 0.0366 * not
+	+ 0.0779 * on
+	+ 0.0136 * people
+	- 0.1356 * reading
+	- 0.0209 * short
+	- 0.1566 * some
+	+ 0.0414 * they
+	+ 0.0584
+
+LM num: 5
+@@class@@ =
+	0.1514 * <br
+	+ 0.1051 * about
+	+ 0.0203 * can
+	- 0.0475 * characters
+	+ 0.0786 * more
+	+ 0.1673 * no
+	+ 0.0366 * not
+	+ 0.0709 * on
+	+ 0.0136 * people
+	- 0.0209 * short
+	+ 0.0105 * some
+	+ 0.2107 * they
+	- 0.0413
+
+LM num: 6
+@@class@@ =
+	0.1514 * <br
+	+ 0.0755 * I
+	+ 0.2089 * about
+	+ 0.0203 * can
+	- 0.0475 * characters
+	+ 0.0951 * more
+	+ 0.1673 * no
+	+ 0.0366 * not
+	+ 0.0709 * on
+	+ 0.0136 * people
+	- 0.0209 * short
+	+ 0.0105 * some
+	+ 0.2107 * they
+	- 0.1066
+
+LM num: 7
+@@class@@ =
+	0.1514 * <br
+	+ 0.1179 * I
+	+ 0.2045 * about
+	+ 0.0203 * can
+	- 0.0475 * characters
+	+ 0.0951 * more
+	+ 0.1673 * no
+	+ 0.0366 * not
+	+ 0.0709 * on
+	+ 0.0136 * people
+	- 0.0209 * short
+	+ 0.0105 * some
+	+ 0.2107 * they
+	- 0.1037
+
+LM num: 8
+@@class@@ =
+	0.1691 * <br
+	+ 0.0624 * about
+	+ 0.0203 * can
+	- 0.0475 * characters
+	- 0.1328 * more
+	+ 0.1673 * no
+	+ 0.0366 * not
+	+ 0.2062 * on
+	+ 0.0136 * people
+	- 0.0209 * short
+	+ 0.0105 * some
+	+ 0.2488 * they
+	+ 0.1845
+
+LM num: 9
+@@class@@ =
+	0.1691 * <br
+	+ 0.0624 * about
+	+ 0.0203 * can
+	- 0.0475 * characters
+	- 0.0405 * more
+	+ 0.1673 * no
+	+ 0.0366 * not
+	+ 0.1968 * on
+	+ 0.0136 * people
+	- 0.0209 * short
+	+ 0.0105 * some
+	+ 0.2488 * they
+	+ 0.2121
+
+LM num: 10
+@@class@@ =
+	0.1286 * <br
+	+ 0.0822 * about
+	+ 0.0203 * can
+	- 0.1397 * characters
+	+ 0.0251 * more
+	+ 0.2187 * no
+	+ 0.0366 * not
+	+ 0.0223 * on
+	+ 0.0136 * people
+	- 0.0209 * short
+	+ 0.0105 * some
+	+ 0.1456 * they
+	+ 0.4539
+
+LM num: 11
+@@class@@ =
+	0.0467 * <br
+	+ 0.0247 * about
+	+ 0.0152 * can
+	- 0.0316 * characters
+	+ 0.0736 * more
+	+ 0.0516 * no
+	+ 0.0352 * not
+	+ 0.0174 * on
+	+ 0.0305 * people
+	- 0.4004 * short
+	+ 0.0235 * some
+	+ 0.0267 * they
+	+ 0.7352
+
+LM num: 12
+@@class@@ =
+	0.0467 * <br
+	+ 0.0247 * about
+	+ 0.0152 * can
+	- 0.0316 * characters
+	+ 0.0478 * more
+	+ 0.0516 * no
+	+ 0.0352 * not
+	+ 0.0174 * on
+	+ 0.0305 * people
+	- 0.0996 * short
+	+ 0.0235 * some
+	+ 0.0267 * they
+	+ 0.7557
+
+Number of Rules : 12
+
+
+
+Time taken to build model: 1.77 seconds
+
+Time taken to test model on training data: 0.04 seconds
+
+=== Error on training data ===
+
+Correctly Classified Instances         194               97      %
+Incorrectly Classified Instances         6                3      %
+Kappa statistic                          0.94
+Mean absolute error                      0.1029
+Root mean squared error                  0.1785
+Relative absolute error                 20.5752 %
+Root relative squared error             35.6981 %
+Total Number of Instances              200
+
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.980    0.040    0.961      0.980    0.970      0.940    0.998     0.998     REVIEWS_UNHELPFUL
+                 0.960    0.020    0.980      0.960    0.970      0.940    0.998     0.998     REVIEWS_HELPFUL
+Weighted Avg.    0.970    0.030    0.970      0.970    0.970      0.940    0.998     0.998
+
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 98  2 |  a = REVIEWS_UNHELPFUL
+  4 96 |  b = REVIEWS_HELPFUL
+
+Time taken to perform cross-validation: 9.24 seconds
+
+
+=== Stratified cross-validation ===
+
+Correctly Classified Instances         167               83.5    %
+Incorrectly Classified Instances        33               16.5    %
+Kappa statistic                          0.67
+Mean absolute error                      0.1903
+Root mean squared error                  0.3372
+Relative absolute error                 38.0557 %
+Root relative squared error             67.4482 %
+Total Number of Instances              200
+
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.830    0.160    0.838      0.830    0.834      0.670    0.925     0.918     REVIEWS_UNHELPFUL
+                 0.840    0.170    0.832      0.840    0.836      0.670    0.925     0.920     REVIEWS_HELPFUL
+Weighted Avg.    0.835    0.165    0.835      0.835    0.835      0.670    0.925     0.919
+
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 83 17 |  a = REVIEWS_UNHELPFUL
+ 16 84 |  b = REVIEWS_HELPFUL
+
+benbow@f6linuxA5:~/a5$ bash text_binary_classify.sh /home/benbow/a5/weka-3-8-5/weka.jar /home/benbow/a5/REVIEWS_appended/
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by weka.core.WekaPackageClassLoaderManager (file:/home/benbow/a5/weka-3-8-5/weka.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of weka.core.WekaPackageClassLoaderManager
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by weka.core.WekaPackageClassLoaderManager (file:/home/benbow/a5/weka-3-8-5/weka.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of weka.core.WekaPackageClassLoaderManager
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+Dec 01, 2021 6:49:03 AM com.github.fommil.netlib.BLAS <clinit>
+WARNING: Failed to load implementation from: com.github.fommil.netlib.NativeSystemBLAS
+Dec 01, 2021 6:49:04 AM com.github.fommil.netlib.BLAS <clinit>
+WARNING: Failed to load implementation from: com.github.fommil.netlib.NativeRefBLAS
+Dec 01, 2021 6:49:04 AM com.github.fommil.netlib.LAPACK <clinit>
+WARNING: Failed to load implementation from: com.github.fommil.netlib.NativeSystemLAPACK
+Dec 01, 2021 6:49:04 AM com.github.fommil.netlib.LAPACK <clinit>
+WARNING: Failed to load implementation from: com.github.fommil.netlib.NativeRefLAPACK
+
+Options: -W weka.classifiers.trees.M5P -num-decimal-places 4
+
+=== Classifier model (full training set) ===
+
+Classification via Regression
+
+Classifier for class with index 0:
+
+M5 pruned model tree:
+(using smoothed linear models)
+
+Iran <= 0.5 :
+|   home <= 0.5 : LM1 (84/0%)
+|   home >  0.5 :
+|   |   //blip <= 0.5 : LM2 (14/0%)
+|   |   //blip >  0.5 : LM3 (8/0%)
+Iran >  0.5 : LM4 (94/0%)
+
+LM num: 1
+@@class@@ =
+	-0.0305 * $
+	- 0.0779 * //blip
+	- 0.0687 * Iran
+	- 0.0305 * home
+	+ 1.0093
+
+LM num: 2
+@@class@@ =
+	-0.151 * $
+	- 0.3079 * //blip
+	- 0.0687 * Iran
+	- 0.0627 * home
+	+ 1.0458
+
+LM num: 3
+@@class@@ =
+	-0.3564 * $
+	- 0.3494 * //blip
+	- 0.0687 * Iran
+	- 0.0627 * home
+	+ 1.0527
+
+LM num: 4
+@@class@@ =
+	-0.0155 * $
+	- 0.0394 * //blip
+	- 0.0763 * Iran
+	- 0.0125 * home
+	+ 0.1413
+
+Number of Rules : 4
+
+Classifier for class with index 1:
+
+M5 pruned model tree:
+(using smoothed linear models)
+
+Iran <= 0.5 :
+|   home <= 0.5 : LM1 (84/0%)
+|   home >  0.5 :
+|   |   //blip <= 0.5 : LM2 (14/0%)
+|   |   //blip >  0.5 : LM3 (8/0%)
+Iran >  0.5 : LM4 (94/0%)
+
+LM num: 1
+@@class@@ =
+	0.0305 * $
+	+ 0.0779 * //blip
+	+ 0.0687 * Iran
+	+ 0.0305 * home
+	- 0.0093
+
+LM num: 2
+@@class@@ =
+	0.151 * $
+	+ 0.3079 * //blip
+	+ 0.0687 * Iran
+	+ 0.0627 * home
+	- 0.0458
+
+LM num: 3
+@@class@@ =
+	0.3564 * $
+	+ 0.3494 * //blip
+	+ 0.0687 * Iran
+	+ 0.0627 * home
+	- 0.0527
+
+LM num: 4
+@@class@@ =
+	0.0155 * $
+	+ 0.0394 * //blip
+	+ 0.0763 * Iran
+	+ 0.0125 * home
+	+ 0.8587
+
+Number of Rules : 4
+
+
+
+Time taken to build model: 1.17 seconds
+
+Time taken to test model on training data: 0.06 seconds
+
+=== Error on training data ===
+
+Correctly Classified Instances         200              100      %
+Incorrectly Classified Instances         0                0      %
+Kappa statistic                          1
+Mean absolute error                      0.0211
+Root mean squared error                  0.0674
+Relative absolute error                  4.2117 %
+Root relative squared error             13.4895 %
+Total Number of Instances              200
+
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     REVIEWS_UNHELPFUL_appended
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     REVIEWS_HELPFUL_appended
+Weighted Avg.    1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000
+
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 100   0 |   a = REVIEWS_UNHELPFUL_appended
+   0 100 |   b = REVIEWS_HELPFUL_appended
+
+Time taken to perform cross-validation: 5.13 seconds
+
+
+=== Stratified cross-validation ===
+
+Correctly Classified Instances         193               96.5    %
+Incorrectly Classified Instances         7                3.5    %
+Kappa statistic                          0.93
+Mean absolute error                      0.0483
+Root mean squared error                  0.1651
+Relative absolute error                  9.6518 %
+Root relative squared error             33.0177 %
+Total Number of Instances              200
+
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.970    0.040    0.960      0.970    0.965      0.930    0.985     0.975     REVIEWS_UNHELPFUL_appended
+                 0.960    0.030    0.970      0.960    0.965      0.930    0.985     0.989     REVIEWS_HELPFUL_appended
+Weighted Avg.    0.965    0.035    0.965      0.965    0.965      0.930    0.985     0.982
+
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 97  3 |  a = REVIEWS_UNHELPFUL_appended
+  4 96 |  b = REVIEWS_HELPFUL_appended
